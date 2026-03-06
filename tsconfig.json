@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "strict": true,
+        "module": "NodeNext",
+        "moduleResolution": "nodenext",
+        "typeRoots": ["./node_modules/@types", "./src/types"],
+        "types": ["node"],
+        "skipLibCheck": true
+    }
+}
