@@ -1,0 +1,39 @@
+{
+  "name": "blog.lnst.kr",
+  "version": "1.0.0",
+  "description": "lnst.kr blog website",
+  "keywords": [
+    "lnst",
+    "blog",
+    "lnstkr",
+    "bloglnst",
+    "bloglnstkr"
+  ],
+  "homepage": "https://github.com/lateNightSnacksToday/blog.lnst.kr#readme",
+  "bugs": {
+    "url": "https://github.com/lateNightSnacksToday/blog.lnst.kr/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lateNightSnacksToday/blog.lnst.kr.git"
+  },
+  "license": "MIT",
+  "author": "lnst",
+  "type": "commonjs",
+  "main": "server.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.3.5",
+    "@types/nodemailer": "^7.0.11"
+  },
+  "dependencies": {
+    "better-sqlite3": "^12.6.2",
+    "express": "^5.2.1",
+    "hash-wasm": "^4.12.0",
+    "nodemailer": "^8.0.2"
+  }
+}

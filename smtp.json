@@ -1,0 +1,9 @@
+{
+    "service": "gmail",
+    "host": "smtp.gmail.com",
+    "port": 587,
+    "secure": false,
+    "requireTLS": true,
+    "email": "lnstkrdev@gmail.com",
+    "pass": "nlrv eisc zttm gyby"
+}
