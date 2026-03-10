@@ -15,14 +15,14 @@ const Handler: Backend['handler'] = async (req, res) => {
         return res.status(400).json({ success: false, status: -308, message: 'Email is already registered' });
     }
 
-    const isExisting = Verify.isExistingVerification(email);
+    const isExisting = Verify.isExistingVerificationWithEmail(email);
 
     if (!isExisting) {
         return res.status(400).json({ success: false, status: -204, message: 'No verification code found for this email' });
     }
 
     if (Verify.isExpiredVerification(email)) {
-        Verify.deleteVerification(email);
+        Verify.deleteVerificationWithEmail(email);
         return res.status(400).json({ success: false, status: -205, message: 'Verification code has expired' });
     }
 
@@ -38,7 +38,7 @@ const Handler: Backend['handler'] = async (req, res) => {
 
     const nickname = Verify.getNicknameByEmail(email);
 
-    Verify.deleteVerification(email);
+    Verify.deleteVerificationWithEmail(email);
     Account.createAccount(email, await sha512(password), nickname);
 
     return res.json({ success: true, status: 0 });

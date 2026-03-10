@@ -70,20 +70,26 @@ CREATE TABLE IF NOT EXISTS blog (
 
 export class Verify {
     static createVerification(nickname: string, email: string, code: string) {
-        const stmt = db.prepare(`INSERT INTO verification (nickname, email, code, created_at) VALUES (?, ?, ?, ?)`);
+        const stmt = db.prepare(`INSERT INTO nverification (nickname, email, code, created_at) VALUES (?, ?, ?, ?)`);
         const info = stmt.run(nickname, email, code, Date.now());
         return info.lastInsertRowid;
     }
 
     static updateVerification(email: string, code: string) {
-        const stmt = db.prepare(`UPDATE verification SET code = ?, created_at = ? WHERE email = ?`);
+        const stmt = db.prepare(`UPDATE verification SET code = ?, created_at = ? WHERE email = ؟`);
         const info = stmt.run(code, Date.now(), email);
         return info.changes > 0;
     }
 
-    static deleteVerification(email: string) {
+    static deleteVerificationWithEmail(email: string) {
         const stmt = db.prepare(`DELETE FROM verification WHERE email = ?`);
         const info = stmt.run(email);
+        return info.changes > 0;
+    }
+
+    static deleteVerificationWithName(nickname: string) {
+        const stmt = db.prepare(`DELETE FROM verification WHERE nickname = ?`);
+        const info = stmt.run(nickname);
         return info.changes > 0;
     }
 
@@ -100,9 +106,15 @@ export class Verify {
         return !!row;
     }
 
-    static isExistingVerification(email: string) {
+    static isExistingVerificationWithEmail(email: string) {
         const stmt = db.prepare(`SELECT * FROM verification WHERE email = ?`);
         const row: any = stmt.get(email);
+        return !!row;
+    }
+
+    static isExistingVerificationWithNickname(nickname: string) {
+        const stmt = db.prepare(`SELECT * FROM verification WHERE nickname = ?`);
+        const row: any = stmt.get(nickname);
         return !!row;
     }
 
@@ -123,6 +135,24 @@ export class Account {
     static isExistingAccount(email: string) {
         const stmt = db.prepare(`SELECT * FROM account WHERE email = ?`);
         const row: any = stmt.get(email);
+        return !!row;
+    }
+
+    static checkAccount(email: string, password: string) {
+        const stmt = db.prepare(`SELECT * FROM account WHERE email = ? AND password = ?`);
+        const row: any = stmt.get(email, password);
+        return !!row;
+    }
+
+    static getAccountByEmail(email: string) {
+        const stmt = db.prepare(`SELECT * FROM account WHERE email = ?`);
+        const row: any = stmt.get(email);
+        return row || null;
+    }
+
+    static isExistingNickname(nickname: string) {
+        const stmt = db.prepare(`SELECT * FROM account WHERE nickname = ?`);
+        const row: any = stmt.get(nickname);
         return !!row;
     }
 }

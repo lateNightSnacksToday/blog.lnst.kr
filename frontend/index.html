@@ -1,225 +1,458 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>회원가입</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원가입</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=DM+Mono:wght@300;400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  :root {
-    --bg: #0a0a0a;
-    --card: #111111;
-    --border: #222222;
-    --border-focus: #444444;
-    --text: #e8e8e8;
-    --text-dim: #555555;
-    --accent: #ffffff;
-    --accent-dim: rgba(255,255,255,0.08);
-    --radius: 18px;
-    --input-radius: 10px;
-  }
+    :root {
+      --bg: #0a0a0a;
+      --card: #111111;
+      --border: #222222;
+      --border-focus: #444444;
+      --text: #e8e8e8;
+      --text-dim: #555555;
+      --accent: #ffffff;
+      --accent-dim: rgba(255, 255, 255, 0.08);
+      --radius: 18px;
+      --input-radius: 10px;
+    }
 
-  body {
-    background: var(--bg);
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Noto Sans KR', sans-serif;
-    color: var(--text);
-    overflow: hidden;
-  }
+    body {
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Noto Sans KR', sans-serif;
+      color: var(--text);
+      overflow: hidden;
+    }
 
-  /* subtle grid bg */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
-    background-size: 48px 48px;
-    pointer-events: none;
-    z-index: 0;
-  }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+    }
 
-  .card {
-    position: relative;
-    z-index: 1;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 48px 44px;
-    width: 100%;
-    max-width: 420px;
-    box-shadow: 0 0 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04) inset;
-    animation: fadeUp 0.45s cubic-bezier(.22,.68,0,1.2) both;
-  }
+    .card {
+      position: relative;
+      z-index: 1;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 48px 44px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 0 80px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+      animation: fadeUp 0.45s cubic-bezier(.22, .68, 0, 1.2) both;
+    }
 
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px) scale(0.98); }
-    to   { opacity: 1; transform: translateY(0) scale(1); }
-  }
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(24px) scale(0.98);
+      }
 
-  .title {
-    font-size: 22px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-    text-align: center;
-    margin-bottom: 36px;
-    color: var(--text);
-  }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
 
-  .title span {
-    color: var(--accent);
-  }
+    .title {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      text-align: center;
+      margin-bottom: 36px;
+      color: var(--text);
+    }
 
-  .field {
-    margin-bottom: 14px;
-    animation: fieldIn 0.3s ease both;
-  }
+    .title span {
+      color: var(--accent);
+    }
 
-  @keyframes fieldIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+    .field {
+      margin-bottom: 14px;
+      animation: fieldIn 0.3s ease both;
+    }
 
-  .field label {
-    display: block;
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    margin-bottom: 7px;
-  }
+    @keyframes fieldIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
 
-  .field input {
-    width: 100%;
-    background: #0f0f0f;
-    border: 1px solid var(--border);
-    border-radius: var(--input-radius);
-    padding: 13px 16px;
-    font-size: 14px;
-    font-family: 'Noto Sans KR', sans-serif;
-    color: var(--text);
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-  }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-  .field input::placeholder { color: #333; }
+    .field label {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 7px;
+    }
 
-  .field input:focus {
-    border-color: var(--border-focus);
-    box-shadow: 0 0 0 3px rgba(255,255,255,0.04);
-  }
+    .field input {
+      width: 100%;
+      background: #0f0f0f;
+      border: 1px solid var(--border);
+      border-radius: var(--input-radius);
+      padding: 13px 16px;
+      font-size: 14px;
+      font-family: 'Noto Sans KR', sans-serif;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
 
-  /* 6-digit code row */
-  .code-row {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    margin-bottom: 14px;
-    animation: fieldIn 0.3s ease both;
-  }
+    .field input::placeholder {
+      color: #333;
+    }
 
-  .code-row input {
-    width: 48px;
-    height: 56px;
-    text-align: center;
-    font-size: 22px;
-    font-family: 'DM Mono', monospace;
-    font-weight: 500;
-    background: #0f0f0f;
-    border: 1px solid var(--border);
-    border-radius: var(--input-radius);
-    color: var(--accent);
-    outline: none;
-    caret-color: var(--accent);
-    transition: border-color 0.2s, box-shadow 0.2s, transform 0.1s;
-  }
+    .field input:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.04);
+    }
 
-  .code-row input:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(255,255,255,0.08);
-    transform: scale(1.06);
-  }
+    .code-row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 14px;
+      animation: fieldIn 0.3s ease both;
+    }
 
-  .code-row input.filled {
-    border-color: #333;
-    color: var(--accent);
-  }
+    .code-row input {
+      width: 48px;
+      height: 56px;
+      text-align: center;
+      font-size: 22px;
+      font-family: 'DM Mono', monospace;
+      font-weight: 500;
+      background: #0f0f0f;
+      border: 1px solid var(--border);
+      border-radius: var(--input-radius);
+      color: var(--accent);
+      outline: none;
+      caret-color: var(--accent);
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.1s;
+    }
 
-  /* password fields */
-  .pw-hint {
-    font-size: 11px;
-    color: var(--text-dim);
-    margin-bottom: 14px;
-    text-align: center;
-    animation: fieldIn 0.3s ease both;
-  }
+    .code-row input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.08);
+      transform: scale(1.06);
+    }
 
-  .btn {
-    width: 100%;
-    margin-top: 8px;
-    padding: 14px;
-    border: none;
-    border-radius: var(--input-radius);
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    cursor: pointer;
-    transition: transform 0.15s, box-shadow 0.15s, background 0.2s;
-    animation: fieldIn 0.3s ease both;
-  }
+    .code-row input.filled {
+      border-color: #333;
+      color: var(--accent);
+    }
 
-  .btn-primary {
-    background: var(--accent);
-    color: #0a0a0a;
-    box-shadow: 0 4px 24px rgba(255,255,255,0.1);
-  }
+    .pw-hint {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-bottom: 14px;
+      text-align: center;
+      animation: fieldIn 0.3s ease both;
+    }
 
-  .btn-primary:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 8px 32px rgba(255,255,255,0.2);
-  }
+    .btn {
+      width: 100%;
+      margin-top: 8px;
+      padding: 14px;
+      border: none;
+      border-radius: var(--input-radius);
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s, background 0.2s;
+      animation: fieldIn 0.3s ease both;
+    }
 
-  .btn-primary:active { transform: translateY(0); }
+    .btn-primary {
+      background: var(--accent);
+      color: #0a0a0a;
+      box-shadow: 0 4px 24px rgba(255, 255, 255, 0.1);
+    }
 
-  .btn:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-    transform: none !important;
-    box-shadow: none !important;
-  }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 32px rgba(255, 255, 255, 0.2);
+    }
 
-  .step-label {
-    font-size: 11px;
-    text-align: center;
-    color: var(--text-dim);
-    margin-bottom: 24px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    animation: fieldIn 0.3s ease both;
-  }
-</style>
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    .step-label {
+      font-size: 11px;
+      text-align: center;
+      color: var(--text-dim);
+      margin-bottom: 24px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      animation: fieldIn 0.3s ease both;
+    }
+
+    /* ── Login Success ── */
+    .login-success {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 0 8px;
+      animation: fieldIn 0.4s cubic-bezier(.22, .68, 0, 1.2) both;
+    }
+
+    .success-circle {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: #4ade80;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 32px rgba(74, 222, 128, 0.35);
+      animation: popIn 0.45s cubic-bezier(.22, .68, 0, 1.4) both;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.4); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+
+    .success-circle svg {
+      animation: drawCheck 0.3s ease 0.2s both;
+      stroke-dasharray: 30;
+      stroke-dashoffset: 30;
+    }
+
+    @keyframes drawCheck {
+      to { stroke-dashoffset: 0; }
+    }
+
+    .success-text {
+      margin-top: 18px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #a0a0a0;
+      animation: fieldIn 0.3s ease 0.35s both;
+    }
+
+    /* ── Switch Link ── */
+    .switch-link-wrap {
+      text-align: center;
+      margin-top: 14px;
+      animation: fieldIn 0.3s ease both;
+      animation-delay: 0.2s;
+    }
+
+    .switch-link {
+      font-size: 12px;
+      color: var(--text-dim);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'Noto Sans KR', sans-serif;
+      transition: color 0.2s;
+      padding: 0;
+    }
+
+    .switch-link:hover {
+      color: #888;
+    }
+
+    /* ── Toast System ── */
+    #toast-container {
+      position: fixed;
+      bottom: 0;
+      right: 24px;
+      z-index: 9999;
+      pointer-events: none;
+    }
+
+    .toast {
+      pointer-events: all;
+      position: absolute;
+      right: 0;
+      border-radius: 10px;
+      padding: 14px 16px 10px 16px;
+      width: 270px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7);
+      overflow: hidden;
+      will-change: transform, opacity;
+    }
+
+    .toast-header {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 5px;
+    }
+
+    .toast-icon {
+      width: 15px;
+      height: 15px;
+      flex-shrink: 0;
+    }
+
+    .toast-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    .toast-msg {
+      font-size: 0.82rem;
+      margin-bottom: 10px;
+      padding-left: 22px;
+      line-height: 1.4;
+    }
+
+    .toast-progress-track {
+      height: 3px;
+      border-radius: 99px;
+      overflow: hidden;
+      margin: 0 -1px;
+    }
+
+    .toast-progress-bar {
+      height: 100%;
+      width: 100%;
+      border-radius: 99px;
+    }
+  </style>
 </head>
+
 <body>
-<div class="card" id="card">
-  <div class="title">회원<span>가입</span></div>
-  <div id="content"></div>
-</div>
+  <div class="card" id="card">
+    <div class="title" id="mainTitle">회원<span>가입</span></div>
+    <div id="content"></div>
+  </div>
 
-<script>
-  const content = document.getElementById('content');
-  let savedEmail = '', savedNickname = '', savedHashedCode = '';
+  <div id="toast-container"></div>
 
-  /* ── STEP 1: 닉네임 / 이메일 ── */
-  function renderStep1(email = '', nickname = '') {
-    content.innerHTML = `
+  <script>
+    const content = document.getElementById('content');
+    const mainTitle = document.getElementById('mainTitle');
+    let savedEmail = '', savedNickname = '', savedHashedCode = '';
+    let currentMode = 'register'; // 'register' | 'login'
+
+    /* ── Toast System ── */
+    const GAP = 10;
+    const BOTTOM_OFFSET = 24;
+    const toastList = [];
+
+    const TOAST_THEMES = {
+      error: { bg: '#1e0a0a', border: 'rgba(220,50,50,0.45)', accent: '#e03030', titleColor: '#e86060', msgColor: 'rgba(220,180,180,0.8)', trackBg: 'rgba(220,50,50,0.15)', icon: `<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>` },
+      success: { bg: '#0a1e0e', border: 'rgba(50,200,90,0.45)', accent: '#22c55e', titleColor: '#4ade80', msgColor: 'rgba(180,220,180,0.8)', trackBg: 'rgba(50,200,90,0.15)', icon: `<polyline points="20 6 9 17 4 12"/>` },
+      info: { bg: '#0a0f1e', border: 'rgba(50,120,220,0.45)', accent: '#3b82f6', titleColor: '#60a5fa', msgColor: 'rgba(180,200,220,0.8)', trackBg: 'rgba(50,120,220,0.15)', icon: `<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>` },
+    };
+
+    function layoutToasts() {
+      let cursor = BOTTOM_OFFSET;
+      for (let i = toastList.length - 1; i >= 0; i--) {
+        const { el } = toastList[i];
+        const h = el.offsetHeight;
+        el.style.transition = 'bottom 0.38s cubic-bezier(0.16,1,0.3,1), opacity 0.28s ease, transform 0.38s cubic-bezier(0.16,1,0.3,1)';
+        el.style.bottom = cursor + 'px';
+        cursor += h + GAP;
+      }
+    }
+
+    function _createToast(type, title, message) {
+      const theme = TOAST_THEMES[type] || TOAST_THEMES.error;
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.style.cssText = `background:${theme.bg};border:1px solid ${theme.border};border-left:3px solid ${theme.accent};`;
+      toast.innerHTML = `
+      <div class="toast-header">
+        <svg class="toast-icon" style="color:${theme.accent}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${theme.icon}</svg>
+        <span class="toast-title" style="color:${theme.titleColor}">${title}</span>
+      </div>
+      <div class="toast-msg" style="color:${theme.msgColor};white-space:pre-line">${message}</div>
+      <div class="toast-progress-track" style="background:${theme.trackBg}">
+        <div class="toast-progress-bar" style="background:${theme.accent}"></div>
+      </div>
+    `;
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(20px)';
+      toast.style.bottom = BOTTOM_OFFSET + 'px';
+      toast.style.transition = 'none';
+      container.appendChild(toast);
+      toastList.push({ el: toast });
+      layoutToasts();
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        toast.style.transition = 'bottom 0.38s cubic-bezier(0.16,1,0.3,1), opacity 0.28s ease, transform 0.38s cubic-bezier(0.16,1,0.3,1)';
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateX(0)';
+      }));
+      const bar = toast.querySelector('.toast-progress-bar');
+      bar.style.transition = 'width 3s linear';
+      requestAnimationFrame(() => requestAnimationFrame(() => { bar.style.width = '0%'; }));
+      setTimeout(() => removeToast(toast), 3000);
+    }
+
+    function removeToast(toast) {
+      toast.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(20px)';
+      setTimeout(() => {
+        const idx = toastList.findIndex(t => t.el === toast);
+        if (idx !== -1) toastList.splice(idx, 1);
+        toast.remove();
+        layoutToasts();
+      }, 260);
+    }
+
+    function toastError(title, message) { _createToast('error', title, message); }
+    function toastSuccess(title, message) { _createToast('success', title, message); }
+    function toastInfo(title, message) { _createToast('info', title, message); }
+
+    /* ── STEP 1: 닉네임 / 이메일 ── */
+    function renderStep1(email = '', nickname = '') {
+      currentMode = 'register';
+      mainTitle.innerHTML = '회원<span>가입</span>';
+      content.innerHTML = `
       <div class="field" style="animation-delay:0.05s">
         <label>닉네임</label>
         <input id="nickname" type="text" placeholder="사용할 닉네임" value="${nickname}">
@@ -229,42 +462,48 @@
         <input id="email" type="email" placeholder="이메일 주소" value="${email}">
       </div>
       <button class="btn btn-primary" id="regBtn" style="animation-delay:0.15s" onclick="submitRegister()">회원가입</button>
+      <div class="switch-link-wrap">
+        <button class="switch-link" onclick="renderLogin()">로그인</button>
+      </div>
     `;
-  }
-
-  async function submitRegister() {
-    const email = document.getElementById('email').value.trim();
-    const nickname = document.getElementById('nickname').value.trim();
-    if (!email || !nickname) { alert('이메일과 닉네임을 모두 입력해주세요.'); return; }
-
-    const btn = document.getElementById('regBtn');
-    btn.disabled = true;
-
-    try {
-      const res = await fetch('/api/verify/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, nickname })
-      });
-      const data = await res.json();
-
-      if (!data.success) {
-        alert(data.message);
-        btn.disabled = false;
-      } else {
-        savedEmail = email;
-        savedNickname = nickname;
-        renderStep2();
-      }
-    } catch (e) {
-      alert('네트워크 오류가 발생했습니다.');
-      btn.disabled = false;
     }
-  }
 
-  /* ── STEP 2: 인증 코드 ── */
-  function renderStep2() {
-    content.innerHTML = `
+    async function submitRegister() {
+      const email = document.getElementById('email').value.trim();
+      const nickname = document.getElementById('nickname').value.trim();
+      if (!email || !nickname) {
+        toastError('입력 오류', '이메일과 닉네임을 모두 입력해주세요.');
+        return;
+      }
+
+      const btn = document.getElementById('regBtn');
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/verify/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, nickname })
+        });
+        const data = await res.json();
+
+        if (!data.success) {
+          toastError('오류', data.message);
+          btn.disabled = false;
+        } else {
+          savedEmail = email;
+          savedNickname = nickname;
+          renderStep2();
+        }
+      } catch (e) {
+        toastError('네트워크 오류', '요청 중 문제가 발생했습니다.');
+        btn.disabled = false;
+      }
+    }
+
+    /* ── STEP 2: 인증 코드 ── */
+    function renderStep2() {
+      content.innerHTML = `
       <p class="step-label" style="animation-delay:0s">이메일로 발송된 6자리 코드를 입력하세요</p>
       <div class="code-row" id="codeRow">
         <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
@@ -277,69 +516,72 @@
       <button class="btn btn-primary" id="verifyBtn" style="animation-delay:0.1s" onclick="submitVerify()">인증</button>
     `;
 
-    const inputs = document.querySelectorAll('#codeRow input');
-    inputs.forEach((inp, i) => {
-      inp.addEventListener('input', () => {
-        inp.value = inp.value.replace(/\D/g, '').slice(-1);
-        if (inp.value && i < 5) inputs[i + 1].focus();
-        inp.classList.toggle('filled', !!inp.value);
-      });
-      inp.addEventListener('keydown', e => {
-        if (e.key === 'Backspace' && !inp.value && i > 0) {
-          inputs[i - 1].focus();
-          inputs[i - 1].value = '';
-          inputs[i - 1].classList.remove('filled');
-        }
-      });
-      inp.addEventListener('paste', e => {
-        e.preventDefault();
-        const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g,'').slice(0,6);
-        [...pasted].forEach((ch, idx) => {
-          if (inputs[idx]) { inputs[idx].value = ch; inputs[idx].classList.add('filled'); }
+      const inputs = document.querySelectorAll('#codeRow input');
+      inputs.forEach((inp, i) => {
+        inp.addEventListener('input', () => {
+          inp.value = inp.value.replace(/\D/g, '').slice(-1);
+          if (inp.value && i < 5) inputs[i + 1].focus();
+          inp.classList.toggle('filled', !!inp.value);
         });
-        if (inputs[Math.min(pasted.length, 5)]) inputs[Math.min(pasted.length, 5)].focus();
+        inp.addEventListener('keydown', e => {
+          if (e.key === 'Backspace' && !inp.value && i > 0) {
+            inputs[i - 1].focus();
+            inputs[i - 1].value = '';
+            inputs[i - 1].classList.remove('filled');
+          }
+        });
+        inp.addEventListener('paste', e => {
+          e.preventDefault();
+          const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 6);
+          [...pasted].forEach((ch, idx) => {
+            if (inputs[idx]) { inputs[idx].value = ch; inputs[idx].classList.add('filled'); }
+          });
+          if (inputs[Math.min(pasted.length, 5)]) inputs[Math.min(pasted.length, 5)].focus();
+        });
       });
-    });
-    inputs[0].focus();
-  }
-
-  async function submitVerify() {
-    const inputs = document.querySelectorAll('#codeRow input');
-    const code = [...inputs].map(i => i.value).join('');
-    if (code.length < 6) { alert('6자리 코드를 모두 입력해주세요.'); return; }
-
-    const btn = document.getElementById('verifyBtn');
-    btn.disabled = true;
-
-    try {
-      const res = await fetch('/api/verify/check', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: savedEmail, code })
-      });
-      const data = await res.json();
-
-      if (!data.success) {
-        if (data.status === -205) {
-          alert('expired');
-          renderStep1(savedEmail, savedNickname);
-        } else {
-          alert(data.message);
-          btn.disabled = false;
-        }
-      } else {
-        savedHashedCode = data.hashedCode;
-        renderStep3();
-      }
-    } catch (e) {
-      alert('네트워크 오류가 발생했습니다.');
-      btn.disabled = false;
+      inputs[0].focus();
     }
-  }
 
-  /* ── STEP 3: 비밀번호 ── */
-  function renderStep3() {
-    content.innerHTML = `
+    async function submitVerify() {
+      const inputs = document.querySelectorAll('#codeRow input');
+      const code = [...inputs].map(i => i.value).join('');
+      if (code.length < 6) {
+        toastError('입력 오류', '6자리 코드를 모두 입력해주세요.');
+        return;
+      }
+
+      const btn = document.getElementById('verifyBtn');
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/verify/check', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: savedEmail, code })
+        });
+        const data = await res.json();
+
+        if (!data.success) {
+          if (data.status === -205) {
+            toastError('인증 만료', '인증 시간이 만료되었습니다. 다시 시도해주세요.');
+            renderStep1(savedEmail, savedNickname);
+          } else {
+            toastError('인증 실패', data.message);
+            btn.disabled = false;
+          }
+        } else {
+          savedHashedCode = data.hashedCode;
+          renderStep3();
+        }
+      } catch (e) {
+        toastError('네트워크 오류', '요청 중 문제가 발생했습니다.');
+        btn.disabled = false;
+      }
+    }
+
+    /* ── STEP 3: 비밀번호 ── */
+    function renderStep3() {
+      content.innerHTML = `
       <div class="field" style="animation-delay:0.05s">
         <label>비밀번호</label>
         <input id="pw1" type="password" placeholder="비밀번호 입력">
@@ -350,46 +592,116 @@
       </div>
       <button class="btn btn-primary" id="confirmBtn" style="animation-delay:0.15s" onclick="submitPassword()">확인</button>
     `;
-  }
-
-  async function submitPassword() {
-    const pw1 = document.getElementById('pw1').value;
-    const pw2 = document.getElementById('pw2').value;
-    if (!pw1) { alert('비밀번호를 입력해주세요.'); return; }
-    if (pw1 !== pw2) { alert('비밀번호가 일치하지 않습니다.'); return; }
-
-    const btn = document.getElementById('confirmBtn');
-    btn.disabled = true;
-
-    try {
-      const res = await fetch('/api/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: savedEmail, password: pw1, code: savedHashedCode })
-      });
-      const data = await res.json();
-
-      if (!data.success) {
-        if (data.status === -205) {
-          alert('expired');
-          renderStep1();
-        } else {
-          alert(data.message);
-          btn.disabled = false;
-        }
-      } else {
-        alert('성공');
-        savedEmail = ''; savedNickname = ''; savedHashedCode = '';
-        renderStep1();
-      }
-    } catch (e) {
-      alert('네트워크 오류가 발생했습니다.');
-      btn.disabled = false;
     }
-  }
 
-  // init
-  renderStep1();
-</script>
+    async function submitPassword() {
+      const pw1 = document.getElementById('pw1').value;
+      const pw2 = document.getElementById('pw2').value;
+      if (!pw1) {
+        toastError('입력 오류', '비밀번호를 입력해주세요.');
+        return;
+      }
+      if (pw1 !== pw2) {
+        toastError('입력 오류', '비밀번호가 일치하지 않습니다.');
+        return;
+      }
+
+      const btn = document.getElementById('confirmBtn');
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: savedEmail, password: pw1, code: savedHashedCode })
+        });
+        const data = await res.json();
+
+        if (!data.success) {
+          if (data.status === -205) {
+            toastError('세션 만료', '인증이 만료되었습니다. 처음부터 다시 시도해주세요.');
+            renderStep1();
+          } else {
+            toastError('오류', data.message);
+            btn.disabled = false;
+          }
+        } else {
+          savedEmail = ''; savedNickname = ''; savedHashedCode = '';
+          renderStep1();
+          toastSuccess('가입 완료', '회원가입이 완료되었습니다!');
+        }
+      } catch (e) {
+        toastError('네트워크 오류', '요청 중 문제가 발생했습니다.');
+        btn.disabled = false;
+      }
+    }
+
+    /* ── LOGIN ── */
+    function renderLogin() {
+      currentMode = 'login';
+      mainTitle.innerHTML = '로<span>그인</span>';
+      content.innerHTML = `
+      <div class="field" style="animation-delay:0.05s">
+        <label>이메일</label>
+        <input id="loginEmail" type="email" placeholder="이메일 주소">
+      </div>
+      <div class="field" style="animation-delay:0.1s">
+        <label>비밀번호</label>
+        <input id="loginPw" type="password" placeholder="비밀번호" onkeydown="if(event.key==='Enter') submitLogin()">
+      </div>
+      <button class="btn btn-primary" id="loginBtn" style="animation-delay:0.15s" onclick="submitLogin()">로그인</button>
+      <div class="switch-link-wrap">
+        <button class="switch-link" onclick="renderStep1()">회원가입</button>
+      </div>
+    `;
+      document.getElementById('loginEmail').focus();
+    }
+
+    async function submitLogin() {
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPw').value;
+      if (!email || !password) {
+        toastError('입력 오류', '이메일과 비밀번호를 모두 입력해주세요.');
+        return;
+      }
+
+      const btn = document.getElementById('loginBtn');
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+
+        if (!data.success) {
+          toastError('로그인 실패', data.message || '이메일 또는 비밀번호가 올바르지 않습니다.');
+          btn.disabled = false;
+        } else {
+          content.innerHTML = `
+            <div class="login-success">
+              <div class="success-circle">
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="none"
+                  stroke="white" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </div>
+              <div class="success-text">로그인 되었습니다</div>
+            </div>
+          `;
+        }
+        toastSuccess('로그인 성공', '환영합니다!');
+      } catch (e) {
+        toastError('네트워크 오류', '요청 중 문제가 발생했습니다.');
+        btn.disabled = false;
+      }
+    }
+
+    // init
+    renderStep1();
+  </script>
 </body>
+
 </html>
