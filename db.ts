@@ -70,13 +70,13 @@ CREATE TABLE IF NOT EXISTS blog (
 
 export class Verify {
     static createVerification(nickname: string, email: string, code: string) {
-        const stmt = db.prepare(`INSERT INTO nverification (nickname, email, code, created_at) VALUES (?, ?, ?, ?)`);
+        const stmt = db.prepare(`INSERT INTO verification (nickname, email, code, created_at) VALUES (?, ?, ?, ?)`);
         const info = stmt.run(nickname, email, code, Date.now());
         return info.lastInsertRowid;
     }
 
     static updateVerification(email: string, code: string) {
-        const stmt = db.prepare(`UPDATE verification SET code = ?, created_at = ? WHERE email = ؟`);
+        const stmt = db.prepare(`UPDATE verification SET code = ?, created_at = ? WHERE email = ?`);
         const info = stmt.run(code, Date.now(), email);
         return info.changes > 0;
     }

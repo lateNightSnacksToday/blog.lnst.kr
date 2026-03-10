@@ -48,11 +48,13 @@ const Handler: Backend['handler'] = async (req, res) => {
 };
 
 function validateName(name: string): boolean {
+    name = name.replace(/ /g, '');
+
     if (Account.isExistingNickname(name)) {
         return false;
     }
 
-    if (name.length < 2 || name.length > 6) {
+    if (name.length < 2 || name.length > 8) {
         return false;
     }
 
