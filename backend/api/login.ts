@@ -23,7 +23,7 @@ const Handler: Backend['handler'] = async (req, res) => {
         return res.status(400).json({ success: false, status: -203, message: 'Invalid password' });
     }
 
-    const account = Account.getAccountByEmail(email, hashedPassword);
+    const account = Account.getAccountByEmail(email);
     delete account.password;
 
     return res.status(200).json({ success: true, status: 0, message: 'Login successful', data: account });
