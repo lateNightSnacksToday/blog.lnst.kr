@@ -42,7 +42,8 @@ const Handler: Backend['handler'] = async (req, res) => {
         }
     }
 
-    await sendVerifyEmail(email, code);
+    console.log("secret code leak!!!",code);
+    // await sendVerifyEmail(email, code);
 
     return res.json({ success: true, status: -100, created_at });
 };
