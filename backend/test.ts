@@ -4,7 +4,7 @@ import { Backend } from "../route";
 
 const Method: Backend['method'] = 'all';
 const Handler: Backend['handler'] = async (req, res) => {
-    return res.json({ success: true, session: req.session });
+    return res.json({ success: true, email: req.session.email, nickname: req.session.nickname, cookie: req.session.cookie });
 };
 
 export default {
