@@ -1,0 +1,9 @@
+{
+    "service": "smtp service",
+    "host": "smtp host",
+    "port": 587,
+    "secure": false,
+    "requireTLS": true,
+    "email": "use your email",
+    "pass": "app password"
+}
