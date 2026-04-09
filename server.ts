@@ -9,6 +9,7 @@ const PORT = 5690;
 let frontExtension: string[] = ['html', 'css', 'js'];
 
 app.use(session({
+<<<<<<< HEAD
     secret: "express-secret", // 겁나 어려운 비번으로 바꾸십시오.
     resave: false,
     saveUninitialized: false,
@@ -16,6 +17,15 @@ app.use(session({
         maxAge: 60 * 1000 // ms단위
     }
 }));
+=======
+    secret: "express-secret",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 60 * 1000 // 1분 후 만료
+    }
+}))
+>>>>>>> 2add68ad75a89627d0210ea6c8f52b0389b4b2a9
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
