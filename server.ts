@@ -1,11 +1,21 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import express from 'express';
+import session from 'express-session';
 
 const app = express();
 const PORT = 5690;
 
 let frontExtension: string[] = ['html', 'css', 'js'];
+
+app.use(session({
+    secret: "express-secret", // 겁나 어려운 비번으로 바꾸십시오.
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 60 * 1000 // ms단위
+    }
+}));
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');

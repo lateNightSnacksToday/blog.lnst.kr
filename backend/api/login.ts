@@ -26,6 +26,9 @@ const Handler: Backend['handler'] = async (req, res) => {
     const account = Account.getAccountByEmail(email);
     delete account.password;
 
+    req.session.nickname = account.nickname;
+    req.session.email = account.email;
+    req.session.isLogined = true;
     return res.status(200).json({ success: true, status: 0, message: 'Login successful', data: account });
 };
 
