@@ -150,9 +150,37 @@ export class Account {
         return row || null;
     }
 
+    static getAccountById(id: number) {
+        const stmt = db.prepare("SELECT * FROM account WHERE _id = ?");
+        const row: any = stmt.get(id);
+        return row || null;
+    }
+
     static isExistingNickname(nickname: string) {
         const stmt = db.prepare(`SELECT * FROM account WHERE nickname = ?`);
         const row: any = stmt.get(nickname);
         return !!row;
+    }
+}
+
+export class Blog {
+    static PAGE_SIZE: number = 10;
+
+    static createBlog(title: string, content: string, author_id: number) {
+        const stmt = db.prepare(`INSERT INTO blog (title, content, author_id, created_at) VALUES (?, ?, ?, ?)`);
+        const info = stmt.run(title,content,author_id,Date.now());
+        return info.lastInsertRowid;
+    }
+
+    static getBlogsByPage(author_id: number, page: number) {
+        const stmt = db.prepare(`SELECT * FROM blog WHERE author_id = ? ORDER BY created_at DESC LIMIT ${Blog.PAGE_SIZE} OFFSET ?`);
+        const rows: any = stmt.all(author_id,page*Blog.PAGE_SIZE);
+        return rows;
+    }
+
+    static getBlogPageCount(author_id: number) {
+        const stmt = db.prepare("SELECT COUNT(*) as count FROM blog WHERE author_id = ?");
+        const row: any = stmt.get(author_id);
+        return Math.max(1,Math.ceil(row.count/Blog.PAGE_SIZE));
     }
 }
