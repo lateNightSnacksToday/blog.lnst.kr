@@ -174,7 +174,12 @@ export class Blog {
 
     static getBlogsByPage(author_id: number, page: number) {
         const stmt = db.prepare(`SELECT * FROM blog WHERE author_id = ? ORDER BY created_at DESC LIMIT ${Blog.PAGE_SIZE} OFFSET ?`);
-        const rows: any = stmt.all(author_id,page*Blog.PAGE_SIZE);
+        const rows: any = stmt.all(author_id,page*Blog.PAGE_SIZE).map((row: any) => {
+            if (row.content) {
+                row.content = row.content.slice(0, 20);
+            }
+            return row;
+        });
         return rows;
     }
 
@@ -182,5 +187,11 @@ export class Blog {
         const stmt = db.prepare("SELECT COUNT(*) as count FROM blog WHERE author_id = ?");
         const row: any = stmt.get(author_id);
         return Math.max(1,Math.ceil(row.count/Blog.PAGE_SIZE));
+    }
+
+    static getBlogById(id: number) {
+        const stmt = db.prepare("SELECT * FROM blog WHERE _id = ?");
+        const row: any = stmt.get(id);
+        return row || null;
     }
 }

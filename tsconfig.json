@@ -3,7 +3,7 @@
         "strict": true,
         "module": "NodeNext",
         "moduleResolution": "nodenext",
-        "typeRoots": ["./node_modules/@types", "./src/types"],
+        "typeRoots": ["./node_modules/@types", "./types"],
         "types": ["node"],
         "skipLibCheck": true
     }

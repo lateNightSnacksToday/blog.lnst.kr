@@ -1,4 +1,5 @@
 node_modules
 email
 blog.db
+sessions.db
 smtp.json

@@ -2,18 +2,30 @@ import * as fs from 'fs';
 import * as path from 'path';
 import express from 'express';
 import session from 'express-session';
+import Database from 'better-sqlite3';
+import SqliteStore from 'better-sqlite3-session-store';
 
 const app = express();
 const PORT = 5690;
 
+const sessionDb = new Database('sessions.db');
+const SqliteStoreInstance = SqliteStore(session);
+
 let frontExtension: string[] = ['html', 'css', 'js'];
 
 app.use(session({
-    secret: "super-secret", // 더 어려운 비번으로 바꿀 필요가 있음
+    secret: "super-secret", // TODO: Change this to a secure secret in production
     resave: false,
     saveUninitialized: false,
+    store: new SqliteStoreInstance({
+        client: sessionDb,
+        expired: {
+            clear: true,
+            intervalMs: 1000 * 60 * 15
+        }
+    }),
     cookie: {
-        maxAge: 60 * 1000 // ms단위
+        maxAge: 60 * 60 * 1000
     }
 }));
 

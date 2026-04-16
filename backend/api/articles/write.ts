@@ -1,5 +1,5 @@
-import { Blog } from "../../db";
-import { Backend } from "../../route";
+import { Blog } from "../../../db";
+import { Backend } from "../../../route";
 
 const Method: Backend['method'] = 'post';
 const Handler: Backend['handler'] = async (req, res) => {

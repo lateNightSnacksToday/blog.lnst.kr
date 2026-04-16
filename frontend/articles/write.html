@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>게시글 작성</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=DM+Mono:wght@300;400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0a;
+      --card: #111111;
+      --border: #222222;
+      --border-focus: #444444;
+      --text: #e8e8e8;
+      --text-dim: #555555;
+      --accent: #ffffff;
+      --accent-dim: rgba(255,255,255,0.08);
+      --radius: 18px;
+      --item-radius: 12px;
+    }
+
+    body {
+      background: var(--bg);
+      min-height: 100vh;
+      font-family: 'Noto Sans KR', sans-serif;
+      color: var(--text);
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 540px;
+      margin: 0 auto;
+      padding: 48px 20px 40px;
+      animation: fadeUp 0.45s cubic-bezier(.22,.68,0,1.2) both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .page-title {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      text-align: center;
+      margin-bottom: 32px;
+      color: var(--text);
+    }
+
+    .page-title span { color: var(--accent); }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .form-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-dim);
+      letter-spacing: 0.3px;
+    }
+
+    .form-input,
+    .form-textarea {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--item-radius);
+      color: var(--text);
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 14px;
+      padding: 14px 16px;
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+
+    .form-input::placeholder,
+    .form-textarea::placeholder {
+      color: var(--text-dim);
+    }
+
+    .form-input:focus,
+    .form-textarea:focus {
+      border-color: var(--border-focus);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 280px;
+      line-height: 1.6;
+    }
+
+    .upload-btn {
+      width: 100%;
+      margin-top: 16px;
+      background: #161616;
+      border: 1px solid var(--border);
+      border-radius: var(--item-radius);
+      color: var(--text);
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 14px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, transform 0.15s;
+    }
+
+    .upload-btn:hover:not(:disabled) {
+      border-color: var(--border-focus);
+      background: #1e1e1e;
+      transform: translateY(-1px);
+    }
+
+    .upload-btn:active:not(:disabled) { transform: translateY(0); }
+
+    .upload-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* ── Toast ── */
+    #toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+      pointer-events: none;
+    }
+
+    .toast {
+      pointer-events: all;
+      position: absolute;
+      right: 0;
+      border-radius: 10px;
+      padding: 14px 16px 10px 16px;
+      width: 270px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.7);
+      overflow: hidden;
+      will-change: transform, opacity;
+    }
+
+    .toast-header { display: flex; align-items: center; gap: 7px; margin-bottom: 5px; }
+    .toast-icon   { width: 15px; height: 15px; flex-shrink: 0; }
+    .toast-title  { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.3px; }
+    .toast-msg    { font-size: 0.82rem; margin-bottom: 10px; padding-left: 22px; line-height: 1.4; }
+    .toast-progress-track { height: 3px; border-radius: 99px; overflow: hidden; margin: 0 -1px; }
+    .toast-progress-bar   { height: 100%; width: 100%; border-radius: 99px; }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <div class="page-title">게시글 <span>작성</span></div>
+
+    <div class="form-group">
+      <label class="form-label" for="titleInput">제목</label>
+      <input class="form-input" id="titleInput" type="text" placeholder="제목을 입력하세요">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="contentInput">내용</label>
+      <textarea class="form-textarea" id="contentInput" placeholder="내용을 입력하세요"></textarea>
+    </div>
+
+    <button class="upload-btn" id="uploadBtn" onclick="submitArticle()">업로드</button>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <script>
+    const GAP = 10, BOTTOM_OFFSET = 24;
+    const toastList = [];
+    const TOAST_THEMES = {
+      error: { bg:'#1e0a0a', border:'rgba(220,50,50,0.45)', accent:'#e03030', titleColor:'#e86060', msgColor:'rgba(220,180,180,0.8)', trackBg:'rgba(220,50,50,0.15)', icon:`<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>` },
+    };
+
+    function layoutToasts() {
+      let cursor = BOTTOM_OFFSET;
+      for (let i = toastList.length - 1; i >= 0; i--) {
+        const { el } = toastList[i];
+        el.style.transition = 'bottom 0.38s cubic-bezier(0.16,1,0.3,1), opacity 0.28s ease, transform 0.38s cubic-bezier(0.16,1,0.3,1)';
+        el.style.bottom = cursor + 'px';
+        cursor += el.offsetHeight + GAP;
+      }
+    }
+
+    function toastError(title, message) {
+      const theme = TOAST_THEMES.error;
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.style.cssText = `background:${theme.bg};border:1px solid ${theme.border};border-left:3px solid ${theme.accent};`;
+      toast.innerHTML = `
+        <div class="toast-header">
+          <svg class="toast-icon" style="color:${theme.accent}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${theme.icon}</svg>
+          <span class="toast-title" style="color:${theme.titleColor}">${title}</span>
+        </div>
+        <div class="toast-msg" style="color:${theme.msgColor}">${message}</div>
+        <div class="toast-progress-track" style="background:${theme.trackBg}">
+          <div class="toast-progress-bar" style="background:${theme.accent}"></div>
+        </div>`;
+      toast.style.cssText += 'opacity:0;transform:translateX(20px);bottom:24px;transition:none;';
+      container.appendChild(toast);
+      toastList.push({ el: toast });
+      layoutToasts();
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        toast.style.transition = 'bottom 0.38s cubic-bezier(0.16,1,0.3,1), opacity 0.28s ease, transform 0.38s cubic-bezier(0.16,1,0.3,1)';
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateX(0)';
+      }));
+      const bar = toast.querySelector('.toast-progress-bar');
+      bar.style.transition = 'width 3s linear';
+      requestAnimationFrame(() => requestAnimationFrame(() => { bar.style.width = '0%'; }));
+      setTimeout(() => {
+        toast.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(20px)';
+        setTimeout(() => {
+          const idx = toastList.findIndex(t => t.el === toast);
+          if (idx !== -1) toastList.splice(idx, 1);
+          toast.remove();
+          layoutToasts();
+        }, 260);
+      }, 3000);
+    }
+
+    async function submitArticle() {
+      const title   = document.getElementById('titleInput').value.trim();
+      const content = document.getElementById('contentInput').value.trim();
+      const btn     = document.getElementById('uploadBtn');
+
+      if (!title || !content) {
+        toastError('입력 오류', '제목과 내용을 모두 입력해주세요.');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = '업로드 중...';
+
+      try {
+        const res  = await fetch('/api/articles/write', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, content }),
+        });
+        const data = await res.json();
+
+        if (!data.success) {
+          toastError('오류', '작성 중 오류가 났습니다.');
+          btn.disabled = false;
+          btn.textContent = '업로드';
+          return;
+        }
+
+        window.location.href = '/articles/';
+      } catch {
+        toastError('네트워크 오류', '요청 중 문제가 발생했습니다.');
+        btn.disabled = false;
+        btn.textContent = '업로드';
+      }
+    }
+  </script>
+</body>
+
+</html>

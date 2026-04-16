@@ -253,7 +253,6 @@
       animation: fieldIn 0.3s ease both;
     }
 
-    /* ── Login Success ── */
     .login-success {
       display: flex;
       flex-direction: column;
@@ -397,9 +396,8 @@
     const content = document.getElementById('content');
     const mainTitle = document.getElementById('mainTitle');
     let savedEmail = '', savedNickname = '', savedHashedCode = '';
-    let currentMode = 'register'; // 'register' | 'login'
+    let currentMode = 'register';
 
-    /* ── Toast System ── */
     const GAP = 10;
     const BOTTOM_OFFSET = 24;
     const toastList = [];
@@ -471,7 +469,6 @@
     function toastSuccess(title, message) { _createToast('success', title, message); }
     function toastInfo(title, message) { _createToast('info', title, message); }
 
-    /* ── Loading State ── */
     function setLoading(btn, isLoading, originalText) {
       if (isLoading) {
         btn.disabled = true;
@@ -484,7 +481,21 @@
       }
     }
 
-    /* ── STEP 1: 닉네임 / 이메일 ── */
+    function showLoginSuccess() {
+      content.innerHTML = `
+        <div class="login-success">
+          <div class="success-circle">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none"
+              stroke="white" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+          <div class="success-text">로그인 되었습니다</div>
+        </div>
+      `;
+      setTimeout(() => { window.location.href = '/articles'; }, 1200);
+    }
+
     function renderStep1(email = '', nickname = '') {
       currentMode = 'register';
       mainTitle.innerHTML = '회원<span>가입</span>';
@@ -537,7 +548,6 @@
       }
     }
 
-    /* ── STEP 2: 인증 코드 ── */
     function renderStep2() {
       content.innerHTML = `
       <p class="step-label" style="animation-delay:0s">이메일로 발송된 6자리 코드를 입력하세요</p>
@@ -672,7 +682,6 @@
       }
     }
 
-    /* ── LOGIN ── */
     function renderLogin() {
       currentMode = 'login';
       mainTitle.innerHTML = '로<span>그인</span>';
@@ -716,17 +725,7 @@
           toastError('로그인 실패', data.message || '이메일 또는 비밀번호가 올바르지 않습니다.');
           setLoading(btn, false, '로그인');
         } else {
-          content.innerHTML = `
-            <div class="login-success">
-              <div class="success-circle">
-                <svg width="34" height="34" viewBox="0 0 24 24" fill="none"
-                  stroke="white" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="20 6 9 17 4 12"/>
-                </svg>
-              </div>
-              <div class="success-text">로그인 되었습니다</div>
-            </div>
-          `;
+          showLoginSuccess();
         }
       } catch (e) {
         toastError('네트워크 오류', '요청 중 문제가 발생했습니다.');
@@ -734,7 +733,6 @@
       }
     }
 
-    // init
     renderStep1();
   </script>
 
@@ -745,18 +743,8 @@
     .then(res => res.json())
     .then(data => {
       if (data.isLogined) {
-          content.innerHTML = `
-            <div class="login-success">
-              <div class="success-circle">
-                <svg width="34" height="34" viewBox="0 0 24 24" fill="none"
-                  stroke="white" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="20 6 9 17 4 12"/>
-                </svg>
-              </div>
-              <div class="success-text">로그인 되었습니다</div>
-            </div>
-          `;
-      } 
+        showLoginSuccess();
+      }
     });
   </script>
 </body>
