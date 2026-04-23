@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>게시글</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=DM+Mono:wght@300;400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0a;
+      --card: #111111;
+      --border: #222222;
+      --border-focus: #444444;
+      --text: #e8e8e8;
+      --text-dim: #555555;
+      --accent: #ffffff;
+      --item-radius: 12px;
+    }
+
+    body {
+      background: var(--bg);
+      min-height: 100vh;
+      font-family: 'Noto Sans KR', sans-serif;
+      color: var(--text);
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 540px;
+      margin: 0 auto;
+      padding: 48px 20px 60px;
+      animation: fadeUp 0.45s cubic-bezier(.22,.68,0,1.2) both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .back-btn {
+      flex-shrink: 0;
+      background: #161616;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 7px 14px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, transform 0.15s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .back-btn:hover {
+      border-color: var(--border-focus);
+      background: #1e1e1e;
+      transform: translateY(-1px);
+    }
+
+    .back-btn:active { transform: translateY(0); }
+
+    .article-title {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: var(--text);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+    }
+
+    .content-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--item-radius);
+      padding: 24px 22px;
+      min-height: 300px;
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--text);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .content-box.loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-dim);
+      font-size: 13px;
+    }
+
+    /* ── Toast ── */
+    #toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+      pointer-events: none;
+    }
+
+    .toast {
+      pointer-events: all;
+      position: absolute;
+      right: 0;
+      border-radius: 10px;
+      padding: 14px 16px 10px 16px;
+      width: 270px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.7);
+      overflow: hidden;
+      will-change: transform, opacity;
+    }
+
+    .toast-header { display: flex; align-items: center; gap: 7px; margin-bottom: 5px; }
+    .toast-icon   { width: 15px; height: 15px; flex-shrink: 0; }
+    .toast-title  { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.3px; }
+    .toast-msg    { font-size: 0.82rem; margin-bottom: 10px; padding-left: 22px; line-height: 1.4; }
+    .toast-progress-track { height: 3px; border-radius: 99px; overflow: hidden; margin: 0 -1px; }
+    .toast-progress-bar   { height: 100%; width: 100%; border-radius: 99px; }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <div class="header">
+      <a class="back-btn" href="/articles/">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        뒤로
+      </a>
+      <div class="article-title" id="articleTitle">불러오는 중...</div>
+    </div>
+    <div class="content-box loading" id="contentBox">불러오는 중...</div>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const id = parseInt(params.get('id'), 10);
+
+    const GAP = 10, BOTTOM_OFFSET = 24;
+    const toastList = [];
+    const TOAST_THEMES = {
+      error: { bg:'#1e0a0a', border:'rgba(220,50,50,0.45)', accent:'#e03030', titleColor:'#e86060', msgColor:'rgba(220,180,180,0.8)', trackBg:'rgba(220,50,50,0.15)', icon:`<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>` },
+    };
+
+    function layoutToasts() {
+      let cursor = BOTTOM_OFFSET;
+      for (let i = toastList.length - 1; i >= 0; i--) {
+        const { el } = toastList[i];
+        el.style.transition = 'bottom 0.38s cubic-bezier(0.16,1,0.3,1), opacity 0.28s ease, transform 0.38s cubic-bezier(0.16,1,0.3,1)';
+        el.style.bottom = cursor + 'px';
+        cursor += el.offsetHeight + GAP;
+      }
+    }
+
+    function toastError(title, message) {
+      const theme = TOAST_THEMES.error;
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.style.cssText = `background:${theme.bg};border:1px solid ${theme.border};border-left:3px solid ${theme.accent};`;
+      toast.innerHTML = `
+        <div class="toast-header">
+          <svg class="toast-icon" style="color:${theme.accent}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${theme.icon}</svg>
+          <span class="toast-title" style="color:${theme.titleColor}">${title}</span>
+        </div>
+        <div class="toast-msg" style="color:${theme.msgColor}">${message}</div>
+        <div class="toast-progress-track" style="background:${theme.trackBg}">
+          <div class="toast-progress-bar" style="background:${theme.accent}"></div>
+        </div>`;
+      toast.style.cssText += 'opacity:0;transform:translateX(20px);bottom:24px;transition:none;';
+      container.appendChild(toast);
+      toastList.push({ el: toast });
+      layoutToasts();
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        toast.style.transition = 'bottom 0.38s cubic-bezier(0.16,1,0.3,1), opacity 0.28s ease, transform 0.38s cubic-bezier(0.16,1,0.3,1)';
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateX(0)';
+      }));
+      const bar = toast.querySelector('.toast-progress-bar');
+      bar.style.transition = 'width 3s linear';
+      requestAnimationFrame(() => requestAnimationFrame(() => { bar.style.width = '0%'; }));
+      setTimeout(() => {
+        toast.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(20px)';
+        setTimeout(() => {
+          const idx = toastList.findIndex(t => t.el === toast);
+          if (idx !== -1) toastList.splice(idx, 1);
+          toast.remove();
+          layoutToasts();
+        }, 260);
+      }, 3000);
+    }
+
+    async function loadArticle() {
+      if (!id || isNaN(id)) {
+        document.getElementById('articleTitle').textContent = '잘못된 접근';
+        const box = document.getElementById('contentBox');
+        box.classList.remove('loading');
+        box.textContent = '올바른 게시글 ID가 필요합니다.';
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/articles/loader', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id }),
+        });
+        const data = await res.json();
+
+        const titleEl = document.getElementById('articleTitle');
+        const box = document.getElementById('contentBox');
+        box.classList.remove('loading');
+
+        if (!data.success) {
+          toastError('오류', '게시글을 불러오지 못했습니다.');
+          titleEl.textContent = '오류';
+          box.textContent = data.message || '불러오기 실패';
+          return;
+        }
+
+        document.title = data.blog.title || '게시글 보기';
+        titleEl.textContent = data.blog.title || '제목 없음';
+        box.textContent = data.blog.content || '';
+      } catch {
+        toastError('네트워크 오류', '요청 중 문제가 발생했습니다.');
+        document.getElementById('contentBox').classList.remove('loading');
+        document.getElementById('contentBox').textContent = '불러오기 실패';
+      }
+    }
+
+    loadArticle();
+  </script>
+</body>
+
+</html>

@@ -13,7 +13,7 @@ const Handler: Backend['handler'] = async (req, res) => {
     if (!req.session.userId) {
         return res.status(400).json({ success: false, message: 'userId not found' });
     }
-    return res.json({ success: true, blogs: Blog.getBlogsByPage(req.session.userId, page), maxPage: Blog.getBlogPageCount(req.session.userId) });
+    return res.json({ success: true, blogs: Blog.getBlogsByPage(page), maxPage: Blog.getBlogPageCount() });
 };
 
 function isSafeNumber(num: number): boolean {

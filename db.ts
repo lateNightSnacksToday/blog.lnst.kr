@@ -172,9 +172,9 @@ export class Blog {
         return info.lastInsertRowid;
     }
 
-    static getBlogsByPage(author_id: number, page: number) {
-        const stmt = db.prepare(`SELECT * FROM blog WHERE author_id = ? ORDER BY created_at DESC LIMIT ${Blog.PAGE_SIZE} OFFSET ?`);
-        const rows: any = stmt.all(author_id,page*Blog.PAGE_SIZE).map((row: any) => {
+    static getBlogsByPage(page: number) {
+        const stmt = db.prepare(`SELECT * FROM blog ORDER BY created_at DESC LIMIT ${Blog.PAGE_SIZE} OFFSET ?`);
+        const rows: any = stmt.all(page*Blog.PAGE_SIZE).map((row: any) => {
             if (row.content) {
                 row.content = row.content.slice(0, 20);
             }
@@ -183,9 +183,9 @@ export class Blog {
         return rows;
     }
 
-    static getBlogPageCount(author_id: number) {
-        const stmt = db.prepare("SELECT COUNT(*) as count FROM blog WHERE author_id = ?");
-        const row: any = stmt.get(author_id);
+    static getBlogPageCount() {
+        const stmt = db.prepare("SELECT COUNT(*) as count FROM blog");
+        const row: any = stmt.get();
         return Math.max(1,Math.ceil(row.count/Blog.PAGE_SIZE));
     }
 
@@ -193,5 +193,11 @@ export class Blog {
         const stmt = db.prepare("SELECT * FROM blog WHERE _id = ?");
         const row: any = stmt.get(id);
         return row || null;
+    }
+
+    static getContentById(id: number) {
+        const stmt = db.prepare("SELECT content FROM blog WHERE _id = ?");
+        const row: any = stmt.get(id);
+        return row ? row.content : null;
     }
 }

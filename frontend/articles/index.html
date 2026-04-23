@@ -371,6 +371,7 @@
             const el = document.createElement('div');
             el.className = 'article-item';
             el.style.animationDelay = `${idx * 0.04}s`;
+            el.onclick = () => { window.location.href = `/articles/viewer?id=${blog._id}`; };
 
             const titleEl = document.createElement('div');
             titleEl.className = 'article-title';
